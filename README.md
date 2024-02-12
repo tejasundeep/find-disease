@@ -45,15 +45,15 @@ How it Works
 
 File Structure
 .
-├── pages
-│   ├── data.json
-│   └── index.js
-├── .gitignore
-├── README.md
-├── package.json
-└── package-lock.json
+   ├── pages
+   │   ├── data.json
+   │   └── index.js
+   ├── .gitignore
+   ├── README.md
+   ├── package.json
+   └── package-lock.json
 
 Author
 
-    Your Name
-    GitHub: yourusername
+    Teja Sundeep
+    GitHub: tejasundeep
