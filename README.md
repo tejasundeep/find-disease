@@ -2,27 +2,21 @@
 
 This is a simple application built with Next.js to find diseases based on symptoms.
 
-## Usage
+Clone the repository:
 
-1. Clone the repository:
+   ```
+   git clone https://github.com/tejasundeep/nextjs-disease-finder.git
+   ```
+Install dependencies:
 
-   ```bash
-   git clone https://github.com/yourusername/nextjs-disease-finder.git
-
-    Install dependencies:
-
-    bash
-
-cd nextjs-disease-finder
-npm install
+    cd nextjs-disease-finder
+    npm install
 
 Run the development server:
-
-bash
-
+   ```
     npm run dev
-
     Open http://localhost:3000 in your browser.
+   ```
 
 Features
 
@@ -42,6 +36,19 @@ How it Works
     Click on "Find Disease" button.
     The application calculates the match percentage of each disease based on the input symptoms.
     Matched diseases with non-zero match percentages are displayed.
+
+File Structure
+
+   ```
+   ├── pages
+   │   ├── data.json
+   │   └── index.js
+   ├── .gitignore
+   ├── README.md
+   ├── package.json
+   └── package-lock.json
+```
+
 
 Author
 
