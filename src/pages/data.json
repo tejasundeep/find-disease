@@ -1,0 +1,56 @@
+{
+    "diseases": [
+        {
+            "name": "Common Cold",
+            "symptoms": [
+                "runny nose",
+                "sneezing",
+                "cough",
+                "sore throat",
+                "fatigue"
+            ]
+        },
+        {
+            "name": "Influenza",
+            "symptoms": ["fever", "chills", "muscle aches", "fatigue", "cough"]
+        },
+        {
+            "name": "Pneumonia",
+            "symptoms": [
+                "fever",
+                "cough",
+                "shortness of breath",
+                "chest pain",
+                "fatigue"
+            ]
+        },
+        {
+            "name": "Bronchitis",
+            "symptoms": [
+                "cough",
+                "mucus production",
+                "chest discomfort",
+                "fatigue"
+            ]
+        },
+        {
+            "name": "Asthma",
+            "symptoms": [
+                "shortness of breath",
+                "wheezing",
+                "chest tightness",
+                "coughing"
+            ]
+        },
+        {
+            "name": "COVID-19",
+            "symptoms": [
+                "fever",
+                "cough",
+                "shortness of breath",
+                "loss of taste or smell",
+                "fatigue"
+            ]
+        }
+    ]
+}
