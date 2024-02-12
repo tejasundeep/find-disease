@@ -43,16 +43,6 @@ How it Works
     The application calculates the match percentage of each disease based on the input symptoms.
     Matched diseases with non-zero match percentages are displayed.
 
-File Structure
-.
-   ├── pages
-   │   ├── data.json
-   │   └── index.js
-   ├── .gitignore
-   ├── README.md
-   ├── package.json
-   └── package-lock.json
-
 Author
 
     Teja Sundeep
