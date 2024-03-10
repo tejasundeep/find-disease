@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import diseasesData from "@/pages/data.json";
 
-export default function Home() {
+const Home = () => {
     const [symptoms, setSymptoms] = useState("");
     const [matchedDiseases, setMatchedDiseases] = useState([]);
     const [error, setError] = useState("");
@@ -18,6 +18,7 @@ export default function Home() {
             setError("Please enter symptoms.");
             return;
         }
+
         setError("");
 
         const newMatchedDiseases = diseasesData.diseases.map(disease => ({
@@ -54,8 +55,7 @@ export default function Home() {
                     <ul>
                         {matchedDiseases.map((disease, index) => (
                             <li key={index}>
-                                {disease.name}:{" "}
-                                {disease.matchPercentage.toFixed(2)}%
+                                {disease.name}: {disease.matchPercentage.toFixed(2)}%
                             </li>
                         ))}
                     </ul>
@@ -63,4 +63,6 @@ export default function Home() {
             )}
         </div>
     );
-}
+};
+
+export default Home;
