@@ -1,5 +1,6 @@
 import React, { useState, useCallback, useMemo } from "react";
 import diseasesData from "@/pages/data.json";
+import { Container, Row, Col, Form, Button, Alert, Badge } from 'react-bootstrap';
 
 const Home = () => {
     const [symptoms, setSymptoms] = useState("");
@@ -7,26 +8,18 @@ const Home = () => {
     const [error, setError] = useState("");
     const [suggestedSymptoms, setSuggestedSymptoms] = useState([]);
 
-    const symptomIndex = useMemo(() => {
-        const index = {};
-        diseasesData.diseases.forEach(disease => {
-            disease.symptoms.forEach(symptom => {
-                const symptomLower = symptom.toLowerCase();
-                if (!index[symptomLower]) {
-                    index[symptomLower] = [];
-                }
-                index[symptomLower].push(disease);
-            });
+    const symptomIndex = useMemo(() => diseasesData.diseases.reduce((index, disease) => {
+        disease.symptoms.forEach(symptom => {
+            const symptomLower = symptom.toLowerCase();
+            index[symptomLower] = [...(index[symptomLower] || []), disease];
         });
         return index;
-    }, [diseasesData]);
+    }, {}), [diseasesData]);
 
-    const calculateMatchPercentage = useMemo(() => {
-        return (inputSymptoms, diseaseSymptoms) => {
-            const cleanedInputSymptoms = inputSymptoms.toLowerCase().split(",").map(symptom => symptom.trim());
-            const matchedSymptoms = cleanedInputSymptoms.filter(symptom => diseaseSymptoms.includes(symptom));
-            return (matchedSymptoms.length / diseaseSymptoms.length) * 100 || 0;
-        };
+    const calculateMatchPercentage = useCallback((inputSymptoms, diseaseSymptoms) => {
+        const cleanedInputSymptoms = inputSymptoms.toLowerCase().split(",").map(symptom => symptom.trim());
+        const matchedSymptoms = cleanedInputSymptoms.filter(symptom => diseaseSymptoms.includes(symptom));
+        return (matchedSymptoms.length / diseaseSymptoms.length) * 100 || 0;
     }, []);
 
     const findMatchingDiseases = useCallback(() => {
@@ -88,85 +81,115 @@ const Home = () => {
     }, []);
 
     return (
-        <div>
-            <h1>Let's check your symptoms</h1>
-            <p>Start typing or search for a symptom from the list below</p>
-            <form onSubmit={handleSubmit}>
-                <input
-                    type="text"
-                    value={symptoms}
-                    onChange={handleInputChange}
-                    placeholder="Enter symptoms"
-                    required
-                />
-                <button type="submit">Find Disease</button>
-                <button type="button" onClick={handleClear}>Clear</button>
-            </form>
-            {error && <div style={{ color: "red" }}>{error}</div>}
-            {suggestedSymptoms.length > 0 && (
-                <SuggestedSymptoms
-                    suggestedSymptoms={suggestedSymptoms}
-                    handleSuggestionClick={handleSuggestionClick}
-                />
-            )}
-            {matchedDiseases.length > 0 ? (
-                <div>
-                    <h2>Matched Diseases:</h2>
-                    <MatchedDiseases matchedDiseases={matchedDiseases} />
-                </div>
-            ) : (
-                <CommonSymptoms handleSuggestionClick={handleSuggestionClick} />
-            )}
-        </div>
+        <>
+            <Container fluid>
+                <Row>
+                    <Col>
+                        <header>Disease Finder</header>
+                    </Col>
+                </Row>
+            </Container>
+            <Container>
+                <Row className="justify-content-center mt-5">
+                    <Col md={6}>
+                        <h1>Let's check your symptoms</h1>
+                        <p>Start typing or search for a symptom from the list below</p>
+                        <Form onSubmit={handleSubmit}>
+                            <Form.Group controlId="symptoms">
+                                <Form.Control
+                                    className="symptoms_input"
+                                    type="text"
+                                    value={symptoms}
+                                    onChange={handleInputChange}
+                                    placeholder="Enter symptoms"
+                                    autoComplete="off"
+                                    required
+                                />
+                            </Form.Group>
+                            {suggestedSymptoms.length > 0 && (
+                                <SuggestedSymptoms
+                                    suggestedSymptoms={suggestedSymptoms}
+                                    handleSuggestionClick={handleSuggestionClick}
+                                />
+                            )}
+                            <CommonSymptoms handleSuggestionClick={handleSuggestionClick} />
+                            <div className="d-grid gap-2">
+                                <Button variant="primary" type="submit" size="lg" className="fs-6 fw-semibold">
+                                    Find Disease
+                                </Button>
+                                <Button variant="secondary" onClick={handleClear} size="lg" className="fs-6 fw-semibold">Clear</Button>
+                            </div>
+                        </Form>
+                        {error && <Alert variant="danger">{error}</Alert>}
+                        {matchedDiseases.length > 0 ? (
+                            <div className="my-4">
+                                <h3>Matched Diseases:</h3>
+                                <MatchedDiseases matchedDiseases={matchedDiseases} />
+                            </div>
+                        ) : null}
+                    </Col>
+                </Row>
+            </Container>
+        </>
     );
 };
 
-const SuggestedSymptoms = React.memo(({ suggestedSymptoms, handleSuggestionClick }) => {
-    return (
-        <ul>
-            {suggestedSymptoms.map((suggestion, index) => (
-                <li key={index} onClick={() => handleSuggestionClick(suggestion)} style={{ cursor: "pointer" }}>
-                    {suggestion}
-                </li>
-            ))}
-        </ul>
-    );
-});
+const SuggestedSymptoms = React.memo(({ suggestedSymptoms, handleSuggestionClick }) => (
+    <ul className="my-4 p-0">
+        {suggestedSymptoms.map((suggestion, index) => (
+            <Badge
+                key={index}
+                bg="light"
+                text="dark"
+                className="me-2 mb-2 p-3 text-capitalize"
+                style={{ cursor: "pointer" }}
+                onClick={() => handleSuggestionClick(suggestion)}
+            >
+                {suggestion}
+            </Badge>
+        ))}
+    </ul>
+));
 
-const MatchedDiseases = React.memo(({ matchedDiseases }) => {
-    return (
-        <ul>
-            {matchedDiseases.map((disease, index) => (
-                <li key={index}>
-                    {disease.name}: {disease.matchPercentage.toFixed(2)}%
-                </li>
-            ))}
-        </ul>
-    );
-});
+const MatchedDiseases = React.memo(({ matchedDiseases }) => (
+    <ul className="matched_diseases">
+        {matchedDiseases.map((disease, index) => (
+            <li key={index}>
+                <b>{disease.name}:</b> {disease.matchPercentage.toFixed(2)}%
+            </li>
+        ))}
+    </ul>
+));
 
 const CommonSymptoms = React.memo(({ handleSuggestionClick }) => {
     const commonSymptomsList = [
-        "headache",
-        "fatigue",
-        "cough",
-        "shortness of breath",
-        "sore throat",
-        "muscle aches",
-        "chills",
-        "loss of smell or taste"
+        "Headache",
+        "Fatigue",
+        "Cough",
+        "Shortness of breath",
+        "Sore throat",
+        "Muscle aches",
+        "Chills",
+        "Loss of smell or taste"
     ];
 
+    const renderSymptoms = useMemo(() => commonSymptomsList.map((symptom, index) => (
+        <Badge
+            key={index}
+            bg="light"
+            text="dark"
+            className="me-2 mb-2 p-3 fs-6 fw-normal"
+            style={{ cursor: "pointer" }}
+            onClick={() => handleSuggestionClick(symptom.toLowerCase())}
+        >
+            {symptom}
+        </Badge>
+    )), [commonSymptomsList, handleSuggestionClick]);
+
     return (
-        <div>
+        <div className="my-4">
             <h3>Common symptoms</h3>
-            <ul>
-                {commonSymptomsList.map((symptom, index) => (
-                    <li key={index} onClick={() => handleSuggestionClick(symptom)} style={{ cursor: "pointer" }}>
-                        {symptom}
-                    </li>
-                ))}
-            </ul>
+            {renderSymptoms}
         </div>
     );
 });
