@@ -1,0 +1,6 @@
+<Response>
+  <Gather action="/api/gather" method="POST" numDigits="1">
+    <Say>Please press 1 or 2.</Say>
+  </Gather>
+  <Say>We didn't receive any input. Goodbye!</Say>
+</Response>
